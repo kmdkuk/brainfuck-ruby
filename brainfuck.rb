@@ -2,6 +2,7 @@ class Brainfuck
   def initialize
     @cells = [0]
     @source = ""
+    @cursor = 0
     @pointer = 0
     @output = ""
   end
@@ -35,9 +36,48 @@ class Brainfuck
   end
 
   def loop_start # [
+    if @cells[@pointer] == 0
+      #対応する]の次に飛ぶ
+      @pointer = searchBrackets
+    end
   end
 
   def loop_end # ]
+    if @cells[@pointer] != 0
+      #対応する[の次に飛ぶ
+      @pointer = searchBrackets
+    end
+  end
+
+  def searchBrackets
+    counte = 0
+    case @source[@cursor]
+    when '['
+      (@ponter..@source.length).each do |i|
+        case @source[i]
+        when '['
+          counter += 1
+        when ']'
+          if counter == 0
+            return i
+          else
+            counter -= 1
+          end
+        end
+      end
+    when ']'
+      (@pointer..0).each do |i|
+        case @source[i]
+        when '['
+          if counter == 0
+            return i
+          else
+            counter -= 1
+          end
+        when ']'
+          counter += 1
+        end
+    end
   end
 end
 
